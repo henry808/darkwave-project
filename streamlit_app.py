@@ -1,46 +1,27 @@
 import streamlit as st
+import csv
+import os
 
+def load_csv_to_dict(file_path):
+    data_dicts = []
+    with open(file_path, mode='r') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            data_dicts.append(row)
+    return data_dicts
 
-# Functions
-# Function to display the Home page
-def show_home():
-    st.title("Welcome to My Blog!")
-    st.write("Here's a blog about games, AI, programming, and sci-fi TV shows.")
+def main():
+    # Assuming the CSV file is named 'data.csv' and is in the current working directory
+    csv_file_name = 'darkwave_bands.csv'
+    csv_file_path = os.path.join(os.getcwd(), csv_file_name)
 
+    if os.path.exists(csv_file_path):
+        data = load_csv_to_dict(csv_file_path)
+        # Display the data in Streamlit
+        st.write("CSV Data:", data)
+    else:
+        st.error(f"File {csv_file_name} not found in the working directory.")
 
-# Function to display the Games page
-def show_games():
-    st.title("Games")
-    st.write("Content about games will go here.")
-
-
-# Function to display the AI page
-def show_ai():
-    st.title("AI")
-    st.write("Content about AI will go here.")
-
-
-# Function to display the Programming page
-def show_programming():
-    st.title("Programming")
-    st.write("Content about programming will go here.")
-
-
-# Function to display the Sci-Fi TV Shows page
-def show_scifi():
-    st.title("Sci-Fi TV Shows")
-    st.write("Content about sci-fi TV shows will go here.")
-
-
-# Sidebar with buttons
-st.sidebar.title("Navigation")
-if st.sidebar.button('Home'):
-    show_home()
-if st.sidebar.button('Games'):
-    show_games()
-if st.sidebar.button('AI'):
-    show_ai()
-if st.sidebar.button('Programming'):
-    show_programming()
-if st.sidebar.button('Sci-Fi TV Shows'):
-    show_scifi()
+if __name__ == "__main__":
+    st.title("CSV Loader App")
+    main()
