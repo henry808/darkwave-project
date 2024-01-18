@@ -8,6 +8,7 @@
 conda create -n darkwave-project python=3.11
 conda install conda-forge::streamlit
 conda install conda-forge::matplotlib
+conda install conda-forge::geopy
 pip install streamlit-modal
 ```
 
