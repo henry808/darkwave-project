@@ -13,6 +13,8 @@ def add_lat_long(data_dicts):
         city = entry['city']
         state = entry['state']
         country = entry['country']  # Replace with actual key names if different
+        if city == "None":
+            city = None
         if city and state and country:
             location = geocode(f"{city}, {state}, {country}")
         elif city and country:
