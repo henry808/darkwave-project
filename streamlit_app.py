@@ -19,7 +19,7 @@ def load_json_to_dict(file_path):
         data_dicts = json.load(file)
     return data_dicts
 
-def display_map(data):
+def display_location_map(data):
     df = pd.DataFrame(data)
     df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
     df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
@@ -72,7 +72,9 @@ def display_map(data):
         get_text_anchor="'middle'",
         get_alignment_baseline="'center'"
     )
-
+    # Title
+    st.header("Darkwave Band Location :bat:", anchor="location")
+    st.write("The city where the band started. Sometimes it will be the city that the band is associated with.")
     # Combine layers
     map = pdk.Deck(
         layers=[scatterplot_layer, text_layer],
@@ -82,7 +84,39 @@ def display_map(data):
 
     st.pydeck_chart(map)
 
+import matplotlib.pyplot as plt
 
+def display_time_map(data):
+    # Convert data to DataFrame
+    df = pd.DataFrame(data)
+
+    # Title
+    st.header("Darkwave Band Time :clock:", anchor="time")
+    st.write("The year the band started.")
+
+    # Ensure 'Year' column exists and is numeric
+    if 'Year' in df and pd.api.types.is_numeric_dtype(df['Year']):
+        # Sort the DataFrame by year
+        df = df.sort_values(by='Year')
+
+        # Create a simple bar chart
+        plt.figure(figsize=(10, 6))
+        plt.barh(df['band'], df['Year'], color='skyblue')
+        plt.xlabel('Year')
+        plt.ylabel('Band')
+        plt.title('Bands Chronological Chart')
+        plt.grid(axis='x')
+        plt.show()
+    else:
+        print("Data does not contain a valid 'Year' column.")
+
+# Example usage
+# display_time_map(data)  # where 'data' is your list of dictionaries
+
+
+def layout(data):
+    display_location_map(data)  # Function call to display the map
+    display_time_map(data)  # Function call to display the chronological chart
 
 def main():
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
@@ -91,10 +125,11 @@ def main():
     if os.path.exists(json_file_path):
         data = load_json_to_dict(json_file_path)
         # st.write("JSON Data:", data)
-        display_map(data)  # Function call to display the map
+        layout(data)
     else:
         st.error(f"File {json_file_name} not found in the working directory.")
 
 if __name__ == "__main__":
-    st.title("Interactive Map Display App")
+    st.title("Darkwave Project")
+    st.write("Interesting Darkwave band information analysis.")
     main()
