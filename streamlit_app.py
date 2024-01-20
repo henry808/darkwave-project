@@ -38,8 +38,8 @@ def display_location_map(data):
     }
 
     view_state = pdk.ViewState(
-        latitude=df['latitude'].mean(), 
-        longitude=df['longitude'].mean(), 
+        latitude=df['latitude'].mean(),
+        longitude=df['longitude'].mean(),
         zoom=1
     )
 
@@ -85,9 +85,6 @@ def display_location_map(data):
 
     st.pydeck_chart(map)
 
-import plotly.express as px
-import pandas as pd
-from datetime import datetime
 
 def display_time_map(data):
     df = pd.DataFrame(data)
@@ -96,24 +93,34 @@ def display_time_map(data):
     df['start_year'] = pd.to_numeric(df['start_year'], errors='coerce')
     df = df[(df['start_year'] >= 1975) & (df['start_year'] <= current_year)]
 
-    df = df.sort_values(by='start_year', ascending=True)
+    # Sort DataFrame by start_year in ascending order
+    df = df.sort_values(by='start_year', ascending=False)
 
-    # Create an interactive timeline chart with Plotly
-    fig = px.scatter(df, x='start_year', y='band', hover_name='band',
-                     title='Band Formation Timeline (1975 - Present)',
-                     labels={'band': 'Band', 'start_year': 'start_year'},
-                     range_x=[1975, current_year])
+    # Create custom y-ticks to space out band names
+    y_ticks = range(len(df))
+    band_names = df['band'].tolist()
 
-    fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
-                      yaxis_title='Band', xaxis_title='start_year')
+    plt.figure(figsize=(15, max(8, len(y_ticks) * 0.5)))  # Adjust figure height based on number of bands
+    plt.hlines(y=y_ticks, xmin=1975, xmax=df['start_year'], color='skyblue')
+    plt.plot(df['start_year'], y_ticks, 'o', color='black')
 
-    fig.update_traces(marker=dict(size=10), selector=dict(mode='markers'))
+    plt.yticks(ticks=y_ticks, labels=band_names, fontsize=20)  # Use custom y-ticks
+    # Create x-axis ticks for every 5 years from 1975 to current year
+    x_ticks = list(range(1975, current_year + 1, 5))
+    if current_year not in x_ticks:  # Ensure the current year is included
+        x_ticks.append(current_year)
+    plt.xticks(ticks=x_ticks, fontsize=20)  # Increase font size for x-axis
 
-    st.plotly_chart(fig, use_container_width=True)
+    plt.xlabel('Start Year', fontsize=20)
+    plt.ylabel('Band', fontsize=20)
+    plt.title('Band Formation Timeline (1975 - Present)', fontsize=22)
+    plt.grid(axis='x', which='both')  # Add grid lines for x-axis ticks
+    plt.xlim(1975, current_year)
 
-# Example usage in Streamlit
-# display_time_map(data)  # where 'data' is your list of dictionaries
+    st.header("Darkwave Band Time ⏲️", anchor="time")
+    st.write("The year the band started.")
 
+    st.pyplot(plt)
 
 def layout(data):
     display_location_map(data)  # Function call to display the map
