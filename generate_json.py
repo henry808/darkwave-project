@@ -7,9 +7,17 @@ import os
 # Geocoding function using geopy
 def add_lat_long(data_dicts):
     geolocator = Nominatim(user_agent="darkwaveproject123$")
-
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+
+    # Add latitude and longitude to each band
+    # Change start_year and end_year to int.
     for entry in data_dicts:
+        entry['start_year'] = int(entry['start_year'])
+        if entry['end_year']:
+            entry['end_year'] = int(entry['end_year'])
+        else:
+            entry['end_year'] = None
+        # calculate latitude and longitude
         city = entry['city']
         state = entry['state']
         country = entry['country']  # Replace with actual key names if different
