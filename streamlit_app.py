@@ -5,19 +5,14 @@ import pandas as pd
 import pydeck as pdk
 import random
 
-def jitter_coordinates(latitude, longitude, radius=0.0001):
-    """Apply a small random offset to the coordinates."""
-    return (
-        latitude + random.uniform(-radius, radius),
-        longitude + random.uniform(-radius, radius)
-    )
 
-# Update DataFrame with jittered coordinates
-def apply_jitter(df):
-    jittered_positions = [jitter_coordinates(lat, lon) for lat, lon in zip(df['latitude'], df['longitude'])]
-    df['jittered_latitude'], df['jittered_longitude'] = zip(*jittered_positions)
+def stack_labels(df, key='band', offset=0.015):
+    # Group by the position and stack labels
+    grouped = df.groupby(['latitude', 'longitude'])
+    for (lat, lon), group in grouped:
+        for i, (_, row) in enumerate(group.iterrows()):
+            df.loc[row.name, 'stacked_latitude'] = lat + i * offset
     return df
-
 
 def load_json_to_dict(file_path):
     with open(file_path, 'r') as file:
@@ -30,14 +25,14 @@ def display_map(data):
     df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
 
     # Update DataFrame with jittered coordinates
-    df = apply_jitter(df)
+    df = stack_labels(df)
 
     # Tooltip for the ScatterplotLayer
     tooltip = {
-        "html": "<b>Band:</b> {band}",
+        "html": "<b>{band}</b>",
         "style": {
             "backgroundColor": "steelblue",
-            "color": "white"
+            "color": "black"
         }
     }
 
@@ -59,7 +54,7 @@ def display_map(data):
         radius_min_pixels=1,
         radius_max_pixels=100,
         line_width_min_pixels=1,
-        get_position=["jittered_longitude", "jittered_latitude"],
+        get_position=["longitude", "stacked_latitude"],
         get_color=[0, 255, 0, 255],  # RGB color format
     )
 
@@ -68,10 +63,10 @@ def display_map(data):
         "TextLayer",
         df,
         pickable=False,
-        get_position=["jittered_longitude", "jittered_latitude"],
+        get_position=["longitude", "stacked_latitude"],
         get_text="band",  # Assuming 'band' is the key for band names in your data
         get_size=16,
-        get_color=[34, 139, 34],  # Forest green
+        get_color=[0, 255, 128],  # Brighter green
         get_angle=0,
         # Adjust text anchor for better positioning
         get_text_anchor="'middle'",
