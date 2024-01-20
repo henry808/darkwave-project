@@ -3,8 +3,9 @@ import json
 import os
 import pandas as pd
 import pydeck as pdk
-import random
-
+import matplotlib.pyplot as plt
+import plotly.express as px
+from datetime import datetime
 
 def stack_labels(df, key='band', offset=0.015):
     # Group by the position and stack labels
@@ -84,33 +85,33 @@ def display_location_map(data):
 
     st.pydeck_chart(map)
 
-import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas as pd
+from datetime import datetime
 
 def display_time_map(data):
-    # Convert data to DataFrame
     df = pd.DataFrame(data)
 
-    # Title
-    st.header("Darkwave Band Time :clock:", anchor="time")
-    st.write("The year the band started.")
+    current_year = datetime.now().year
+    df['start_year'] = pd.to_numeric(df['start_year'], errors='coerce')
+    df = df[(df['start_year'] >= 1975) & (df['start_year'] <= current_year)]
 
-    # Ensure 'Year' column exists and is numeric
-    if 'Year' in df and pd.api.types.is_numeric_dtype(df['Year']):
-        # Sort the DataFrame by year
-        df = df.sort_values(by='Year')
+    df = df.sort_values(by='start_year', ascending=True)
 
-        # Create a simple bar chart
-        plt.figure(figsize=(10, 6))
-        plt.barh(df['band'], df['Year'], color='skyblue')
-        plt.xlabel('Year')
-        plt.ylabel('Band')
-        plt.title('Bands Chronological Chart')
-        plt.grid(axis='x')
-        plt.show()
-    else:
-        print("Data does not contain a valid 'Year' column.")
+    # Create an interactive timeline chart with Plotly
+    fig = px.scatter(df, x='start_year', y='band', hover_name='band',
+                     title='Band Formation Timeline (1975 - Present)',
+                     labels={'band': 'Band', 'start_year': 'start_year'},
+                     range_x=[1975, current_year])
 
-# Example usage
+    fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
+                      yaxis_title='Band', xaxis_title='start_year')
+
+    fig.update_traces(marker=dict(size=10), selector=dict(mode='markers'))
+
+    st.plotly_chart(fig, use_container_width=True)
+
+# Example usage in Streamlit
 # display_time_map(data)  # where 'data' is your list of dictionaries
 
 
