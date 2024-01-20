@@ -26,6 +26,7 @@ conda install conda-forge::matplotlib
 conda install conda-forge::geopy
 conda install conda-forge::pydeck
 conda install conda-forge::pandas
+# conda install conda-forge::plotly
 ```
 
 ## Activating Condo
@@ -61,13 +62,20 @@ print((location.latitude, location.longitude))
 print(location.raw)
 ```
 
+## ToDo
+1. Fix bands that show up in middle
+2. Add more bands
+3. Add chronological graph
+4. Add Influence graph
+5. Better tooltip display
+6. Fix style
 
 
 ## Support
 Github issue
 
 ## Roadmap
-Might do influence chart.
+I am considering working on an influence chart.
 
 ## Authors and acknowledgment
 Henry Grantham
