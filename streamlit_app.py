@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import pydeck as pdk
 import matplotlib.pyplot as plt
-import plotly.express as px
+# import plotly.express as px
 from datetime import datetime
 
 def stack_labels(df, key='band', offset=0.015):
