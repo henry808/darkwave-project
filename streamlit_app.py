@@ -123,8 +123,20 @@ def display_time_map(data):
     st.pyplot(plt)
 
 def layout(data):
+
+    st.title("Darkwave Band Progression")
+    st.write("Venture deep into the shadowy realms of Darkwave music, where echoes of the past intertwine with the pulse of the present..")
+
     display_location_map(data)  # Function call to display the map
     display_time_map(data)  # Function call to display the chronological chart
+
+    hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
 def main():
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
@@ -138,6 +150,4 @@ def main():
         st.error(f"File {json_file_name} not found in the working directory.")
 
 if __name__ == "__main__":
-    st.title("Darkwave Project")
-    st.write("Interesting Darkwave band information analysis.")
     main()
