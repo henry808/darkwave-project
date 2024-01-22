@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'Bradley Gratis';
+    src: url('YOUR_FONT_URL') format('truetype');
+}
+
+body {
+    font-family: 'Bradley Gratis', sans-serif;
+}
