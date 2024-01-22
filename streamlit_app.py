@@ -7,7 +7,30 @@ import matplotlib.pyplot as plt
 # import plotly.express as px
 from datetime import datetime
 
+# Function to load and apply CSS
+def load_css(css_file):
+    """
+    Load and apply a CSS file to the Streamlit app.
+    
+    Args:
+    - css_file (str): The path to the CSS file.
+    """
+    with open(css_file, "r") as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+
 def stack_labels(df, key='band', offset=0.015):
+    """
+    Adjust the label positions in the DataFrame for better visualization.
+    
+    Args:
+    - df (pandas.DataFrame): The DataFrame containing the data.
+    - key (str, optional): The key column to use for stacking. Defaults to 'band'.
+    - offset (float, optional): The offset to use for stacking labels. Defaults to 0.015.
+    
+    Returns:
+    - pandas.DataFrame: The modified DataFrame with adjusted label positions.
+    """
     # Group by the position and stack labels
     grouped = df.groupby(['latitude', 'longitude'])
     for (lat, lon), group in grouped:
@@ -16,11 +39,26 @@ def stack_labels(df, key='band', offset=0.015):
     return df
 
 def load_json_to_dict(file_path):
+    """
+    Load JSON data from a file into a dictionary.
+    
+    Args:
+    - file_path (str): The path to the JSON file.
+    
+    Returns:
+    - dict: The data loaded from the JSON file.
+    """
     with open(file_path, 'r') as file:
         data_dicts = json.load(file)
     return data_dicts
 
 def display_location_map(data):
+    """
+    Display a map with data points.
+    
+    Args:
+    - data (dict): The data to display on the map.
+    """
     df = pd.DataFrame(data)
     df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
     df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
@@ -124,6 +162,11 @@ def display_time_map(data):
 
 def layout(data):
 
+    hide = False
+    css_file = 'style.css'
+    if os.path.isfile(css_file):
+        load_css(css_file)
+
     st.title("Darkwave Band Progression")
     st.write("Venture deep into the shadowy realms of Darkwave music, where echoes of the past intertwine with the pulse of the present..")
 
@@ -136,7 +179,8 @@ def layout(data):
             footer {visibility: hidden;}
             </style>
             """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+    if hide:
+        st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
 def main():
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
