@@ -219,9 +219,6 @@ def display_band_info(bands_data, debug):
 
     # Display the selected band's information
     if selected_band_data:
-        st.write("Band Name:", selected_band_data['band'])
-        st.write("Year Started:", selected_band_data['start_year'])
-
         # Construct the path to the image
         file_name = selected_band_data['band'] + ".png"
         image_directory = "png"
@@ -235,6 +232,14 @@ def display_band_info(bands_data, debug):
             st.image(image_path, caption=selected_band_name)
         else:
             st.error(f"Image for {image_path} not found.")
+        # Band Name
+        st.write("Band Name:", selected_band_data['band'])
+        st.write("Year Started:", selected_band_data['start_year'])
+        st.write("City:", selected_band_data['city'])
+        st.write("Country:", selected_band_data['country'])
+
+
+
 
 def layout(data, debug, hide):
 
@@ -262,7 +267,7 @@ def main():
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
     json_file_path = os.path.join(os.getcwd(), json_file_name)
 
-    debug = True
+    debug = False
     hide = False
 
     if os.path.exists(json_file_path):
