@@ -3,8 +3,9 @@ import json
 import os
 import pandas as pd
 import pydeck as pdk
-import matplotlib.pyplot as plt
-# import plotly.express as px
+# import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime
 
 # Function to load and apply CSS
@@ -17,7 +18,6 @@ def load_css(css_file):
     """
     with open(css_file, "r") as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
 
 def stack_labels(df, key='band', offset=0.015):
     """
@@ -124,41 +124,87 @@ def display_location_map(data):
     st.pydeck_chart(map)
 
 
+# Timeline graph
+#
+# Verticle graph lines at every 5 years starting with 1975
+# Chronological order for bands (earliest at top)
+# Year only Labels at each of 5 years.
+# Height of graph at level showing all bands.
+
+
 def display_time_map(data):
     df = pd.DataFrame(data)
 
     current_year = datetime.now().year
     df['start_year'] = pd.to_numeric(df['start_year'], errors='coerce')
+    df = df.dropna(subset=['start_year'])
     df = df[(df['start_year'] >= 1975) & (df['start_year'] <= current_year)]
 
-    # Sort DataFrame by start_year in ascending order
-    df = df.sort_values(by='start_year', ascending=False)
+    if 'band' not in df.columns or df['band'].isnull().all():
+        st.error("No valid 'band' data to display.")
+        return
 
-    # Create custom y-ticks to space out band names
-    y_ticks = range(len(df))
-    band_names = df['band'].tolist()
+    # Sort data in reverse chronological order
+    df = df.sort_values(by='start_year', ascending=True)
 
-    plt.figure(figsize=(15, max(8, len(y_ticks) * 0.5)))  # Adjust figure height based on number of bands
-    plt.hlines(y=y_ticks, xmin=1975, xmax=df['start_year'], color='skyblue')
-    plt.plot(df['start_year'], y_ticks, 'o', color='black')
+    # Calculate graph height
+    graph_height = max(600, len(df) * 20)
 
-    plt.yticks(ticks=y_ticks, labels=band_names, fontsize=20)  # Use custom y-ticks
-    # Create x-axis ticks for every 5 years from 1975 to current year
-    x_ticks = list(range(1975, current_year + 1, 5))
-    if current_year not in x_ticks:  # Ensure the current year is included
-        x_ticks.append(current_year)
-    plt.xticks(ticks=x_ticks, fontsize=20)  # Increase font size for x-axis
+    # Create Plotly figure
+    fig = go.Figure()
 
-    plt.xlabel('Start Year', fontsize=20)
-    plt.ylabel('Band', fontsize=20)
-    plt.title('Band Formation Timeline (1975 - Present)', fontsize=22)
-    plt.grid(axis='x', which='both')  # Add grid lines for x-axis ticks
-    plt.xlim(1975, current_year)
+    for _, row in df.iterrows():
+        fig.add_trace(go.Scatter(
+            x=[row['start_year'], current_year],
+            y=[row['band'], row['band']],
+            mode='lines',
+            name=row['band'],
+            showlegend=False  # Do not show legend for each line
+        ))
 
-    st.header("Darkwave Band Time ⏲️", anchor="time")
-    st.write("The year the band started.")
+    # Update x-axis for vertical grid lines every 5 years
+    fig.update_xaxes(
+        showgrid=True,            # Enable grid lines
+        gridwidth=1,              # Set grid line width
+        gridcolor='LightGrey',    # Set grid line color
+        tickmode='linear',        # Set tick mode to linear for even distribution
+        tick0=1975,               # Start ticks from 1975
+        dtick=5,                  # Set tick interval to every 5 years
+        tickformat="%Y",          # Format x-axis labels to show only year
+        mirror=True,             # Mirror the ticks and labels to the top
+    )
 
-    st.pyplot(plt)
+    # Update layout
+    fig.update_layout(
+        xaxis=dict(
+            title='Year',
+            tickmode='linear',
+            tick0=1975,
+            dtick=5,
+            range=[1975, current_year]
+        ),
+        xaxis2=dict(
+            overlaying="x", 
+            side="top", 
+            showgrid=False,
+            tickformat="%Y",
+            tickmode='linear',
+            tick0=1975,
+            dtick=5
+        ),
+        yaxis=dict(
+            title='Band',
+            autorange="reversed"  # Reverse the y-axis to have earliest bands on top
+        ),
+        title='Band Formation Timeline',
+        title_font_size=22,
+        font_size=20,
+        height=graph_height
+    )
+
+    st.header("Band Formation Timeline")
+    st.plotly_chart(fig, use_container_width=True)
+
 
 def layout(data):
 
