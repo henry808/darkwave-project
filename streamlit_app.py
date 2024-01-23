@@ -225,7 +225,8 @@ def display_band_info(bands_data, debug):
         # Construct the path to the image
         file_name = selected_band_data['band'] + ".png"
         image_directory = "png"
-        image_path = os.path.join(os.getcwd(), image_directory, file_name)
+        # image_path = os.path.join(os.getcwd(), image_directory, file_name)
+        image_path = os.path.join(image_directory, file_name)
         if debug:
             st.write("image path = ", image_path)
 
@@ -235,9 +236,8 @@ def display_band_info(bands_data, debug):
         else:
             st.error(f"Image for {image_path} not found.")
 
-def layout(data, debug):
+def layout(data, debug, hide):
 
-    hide = False
     css_file = 'style.css'
     if os.path.isfile(css_file):
         load_css(css_file)
@@ -263,11 +263,12 @@ def main():
     json_file_path = os.path.join(os.getcwd(), json_file_name)
 
     debug = True
+    hide = False
 
     if os.path.exists(json_file_path):
         data = load_json_to_dict(json_file_path)
         # st.write("JSON Data:", data)
-        layout(data, debug)
+        layout(data, debug, hide)
     else:
         st.error(f"File {json_file_name} not found in the working directory.")
 
