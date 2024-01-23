@@ -206,7 +206,36 @@ def display_time_map(data):
     st.plotly_chart(fig, use_container_width=True)
 
 
-def layout(data):
+# Function to display band information along with local image
+def display_band_info(bands_data, debug):
+    # Extract band names for the dropdown
+    band_names = [band['band'] for band in bands_data]
+
+    # Create a dropdown for selecting a band
+    selected_band_name = st.selectbox("Select a band", band_names)
+
+    # Find the selected band's data
+    selected_band_data = next((band for band in bands_data if band['band'] == selected_band_name), None)
+
+    # Display the selected band's information
+    if selected_band_data:
+        st.write("Band Name:", selected_band_data['band'])
+        st.write("Year Started:", selected_band_data['start_year'])
+
+        # Construct the path to the image
+        file_name = selected_band_data['band'] + ".png"
+        image_directory = "png"
+        image_path = os.path.join(os.getcwd(), image_directory, file_name)
+        if debug:
+            st.write("image path = ", image_path)
+
+        # Check if the image exists and then display it
+        if os.path.exists(image_path):
+            st.image(image_path, caption=selected_band_name)
+        else:
+            st.error(f"Image for {image_path} not found.")
+
+def layout(data, debug):
 
     hide = False
     css_file = 'style.css'
@@ -218,6 +247,7 @@ def layout(data):
 
     display_location_map(data)  # Function call to display the map
     display_time_map(data)  # Function call to display the chronological chart
+    display_band_info(data, debug) # Function to show one band.
 
     hide_streamlit_style = """
             <style>
@@ -232,10 +262,12 @@ def main():
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
     json_file_path = os.path.join(os.getcwd(), json_file_name)
 
+    debug = True
+
     if os.path.exists(json_file_path):
         data = load_json_to_dict(json_file_path)
         # st.write("JSON Data:", data)
-        layout(data)
+        layout(data, debug)
     else:
         st.error(f"File {json_file_name} not found in the working directory.")
 
