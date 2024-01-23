@@ -207,7 +207,7 @@ def display_time_map(data):
 
 
 # Function to display band information along with local image
-def display_band_info(bands_data, debug):
+def display_band_info(bands_data, image_directory, debug):
     # Extract band names for the dropdown
     band_names = [band['band'] for band in bands_data]
 
@@ -219,19 +219,26 @@ def display_band_info(bands_data, debug):
 
     # Display the selected band's information
     if selected_band_data:
-        # Construct the path to the image
-        file_name = selected_band_data['band'] + ".png"
-        image_directory = "png"
-        # image_path = os.path.join(os.getcwd(), image_directory, file_name)
-        image_path = os.path.join(image_directory, file_name)
-        if debug:
-            st.write("image path = ", image_path)
+        # Construct the paths to the images
+        file_name_png = selected_band_data['band'] + ".png"
+        file_name_jpg = selected_band_data['band'] + ".jpg"
+        
+        image_path_png = os.path.join(image_directory, file_name_png)
+        image_path_jpg = os.path.join(image_directory, file_name_jpg)
 
-        # Check if the image exists and then display it
-        if os.path.exists(image_path):
-            st.image(image_path, caption=selected_band_name)
+        if debug:
+            st.write("PNG image path = ", image_path_png)
+            st.write("JPG image path = ", image_path_jpg)
+
+        # Check if the PNG image exists and then display it
+        if os.path.exists(image_path_png):
+            st.image(image_path_png, caption=selected_band_name)
+        # If PNG does not exist, check for JPG
+        elif os.path.exists(image_path_jpg):
+            st.image(image_path_jpg, caption=selected_band_name)
         else:
-            st.error(f"Image for {image_path} not found.")
+            st.error(f"Image for {selected_band_name} not found.")
+
         # Band Name
         st.write("Band Name:", selected_band_data['band'])
         st.write("Year Started:", selected_band_data['start_year'])
@@ -241,7 +248,7 @@ def display_band_info(bands_data, debug):
 
 
 
-def layout(data, debug, hide):
+def layout(data, image_directory, debug, hide):
 
     css_file = 'style.css'
     if os.path.isfile(css_file):
@@ -252,7 +259,7 @@ def layout(data, debug, hide):
 
     display_location_map(data)  # Function call to display the map
     display_time_map(data)  # Function call to display the chronological chart
-    display_band_info(data, debug) # Function to show one band.
+    display_band_info(data, image_directory, debug) # Function to show one band.
 
     hide_streamlit_style = """
             <style>
@@ -264,16 +271,20 @@ def layout(data, debug, hide):
         st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
 def main():
+    # Configuration
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
-    json_file_path = os.path.join(os.getcwd(), json_file_name)
-
+    image_directory = "png"
     debug = False
     hide = False
 
+    # get data and create layout
+    json_file_path = os.path.join(os.getcwd(), json_file_name)
     if os.path.exists(json_file_path):
         data = load_json_to_dict(json_file_path)
-        # st.write("JSON Data:", data)
-        layout(data, debug, hide)
+        if debug:
+            # st.write("JSON Data:", data)
+            pass
+        layout(data, image_directory, debug, hide)
     else:
         st.error(f"File {json_file_name} not found in the working directory.")
 
