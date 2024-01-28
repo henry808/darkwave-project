@@ -211,6 +211,8 @@ def display_band_info(bands_data, image_directory, debug):
     # Extract band names for the dropdown
     band_names = [band['band'] for band in bands_data]
 
+    band_names.sort()
+
     # Create a dropdown for selecting a band
     selected_band_name = st.selectbox("Select a band", band_names)
 
