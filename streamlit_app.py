@@ -7,6 +7,8 @@ import pydeck as pdk
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
+from streamlit_option_menu import option_menu  # Additional library for horizontal menu
+
 
 # Function to load and apply CSS
 def load_css(css_file):
@@ -51,6 +53,9 @@ def load_json_to_dict(file_path):
     with open(file_path, 'r') as file:
         data_dicts = json.load(file)
     return data_dicts
+
+def display_home(anchor):
+    st.write("Venture deep into the shadowy realms of Darkwave music, where echoes of the past intertwine with the pulse of the present..")
 
 def display_location_map(data):
     """
@@ -207,7 +212,7 @@ def display_time_map(data):
 
 
 # Function to display band information along with local image
-def display_band_info(bands_data, image_directory, debug):
+def display_band_info(bands_data, image_directory, pic_width, debug):
     # Extract band names for the dropdown
     band_names = [band['band'] for band in bands_data]
 
@@ -234,12 +239,18 @@ def display_band_info(bands_data, image_directory, debug):
 
         # Check if the PNG image exists and then display it
         if os.path.exists(image_path_png):
-            st.image(image_path_png, caption=selected_band_name)
+            st.image(image_path_png, width=pic_width, caption=selected_band_name)
         # If PNG does not exist, check for JPG
         elif os.path.exists(image_path_jpg):
-            st.image(image_path_jpg, caption=selected_band_name)
+            st.image(image_path_jpg, width=pic_width, caption=selected_band_name)
         else:
-            st.error(f"Image for {selected_band_name} not found.")
+            if debug:
+                st.error(f"Image for {selected_band_name} not found.")
+            else:
+                file_name_jpg = "Darkwave Band.jpg"
+                image_path_jpg = os.path.join(image_directory, file_name_jpg)
+                st.image(image_path_jpg, width=pic_width, caption=selected_band_name)
+                
 
         # Band Name
         st.write("Band Name:", selected_band_data['band'])
@@ -250,18 +261,30 @@ def display_band_info(bands_data, image_directory, debug):
 
 
 
-def layout(data, image_directory, debug, hide):
+def layout(data, image_directory, pic_width, debug, hide):
 
     css_file = 'style.css'
     if os.path.isfile(css_file):
         load_css(css_file)
 
-    st.title("Darkwave Band Progression")
-    st.write("Venture deep into the shadowy realms of Darkwave music, where echoes of the past intertwine with the pulse of the present..")
+    st.title("Darkwave Band Exploration")
 
-    display_location_map(data)  # Function call to display the map
-    display_time_map(data)  # Function call to display the chronological chart
-    display_band_info(data, image_directory, debug) # Function to show one band.
+    # Horizontal Menu
+    selected = option_menu("Main Menu",
+                        ['Home', 'Map', 'Time Graph', 'Band Information'],
+                        icons=['house', 'globe-americas','calendar', 'info-circle-fill'],
+                        menu_icon='cast',
+                        default_index=1,
+                        orientation='horizontal')
+    if selected == "Home":
+        display_home()
+    elif selected == "Map":
+        display_location_map(data)  # Function call to display the map
+    elif selected == "Time Graph":
+        display_time_map(data)  # Function call to display the chronological chart
+    elif selected == "Band Information":
+        display_band_info(data, image_directory, pic_width, debug) # Function to show one band.
+    
 
     hide_streamlit_style = """
             <style>
@@ -276,6 +299,7 @@ def main():
     # Configuration
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
     image_directory = "png"
+    pic_width = 500
     debug = False
     hide = False
 
@@ -286,7 +310,7 @@ def main():
         if debug:
             # st.write("JSON Data:", data)
             pass
-        layout(data, image_directory, debug, hide)
+        layout(data, image_directory, pic_width, debug, hide)
     else:
         st.error(f"File {json_file_name} not found in the working directory.")
 
