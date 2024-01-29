@@ -137,7 +137,7 @@ def display_location_map(data):
 # Height of graph at level showing all bands.
 
 
-def display_time_map(data):
+def display_time_chart(data):
     df = pd.DataFrame(data)
 
     current_year = datetime.now().year
@@ -149,37 +149,32 @@ def display_time_map(data):
         st.error("No valid 'band' data to display.")
         return
 
-    # Sort data in reverse chronological order
     df = df.sort_values(by='start_year', ascending=True)
-
-    # Calculate graph height
     graph_height = max(600, len(df) * 20)
-
-    # Create Plotly figure
     fig = go.Figure()
 
     for _, row in df.iterrows():
         fig.add_trace(go.Scatter(
-            x=[row['start_year'], current_year],
-            y=[row['band'], row['band']],
-            mode='lines',
+            x=[row['start_year']],
+            y=[row['band']],
+            mode='markers+text',
             name=row['band'],
-            showlegend=False  # Do not show legend for each line
+            text=[str(row['start_year'])],  # Label for the point
+            textposition="top center",      # Position of the text label
+            marker=dict(size=10)            # Size of the marker
         ))
 
-    # Update x-axis for vertical grid lines every 5 years
     fig.update_xaxes(
-        showgrid=True,            # Enable grid lines
-        gridwidth=1,              # Set grid line width
-        gridcolor='LightGrey',    # Set grid line color
-        tickmode='linear',        # Set tick mode to linear for even distribution
-        tick0=1975,               # Start ticks from 1975
-        dtick=5,                  # Set tick interval to every 5 years
-        tickformat="%Y",          # Format x-axis labels to show only year
-        mirror=True,             # Mirror the ticks and labels to the top
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='LightGrey',
+        tickmode='linear',
+        tick0=1975,
+        dtick=5,
+        tickformat="%Y",
+        mirror=True,
     )
 
-    # Update layout
     fig.update_layout(
         xaxis=dict(
             title='Year',
@@ -188,18 +183,9 @@ def display_time_map(data):
             dtick=5,
             range=[1975, current_year]
         ),
-        xaxis2=dict(
-            overlaying="x", 
-            side="top", 
-            showgrid=False,
-            tickformat="%Y",
-            tickmode='linear',
-            tick0=1975,
-            dtick=5
-        ),
         yaxis=dict(
             title='Band',
-            autorange="reversed"  # Reverse the y-axis to have earliest bands on top
+            autorange="reversed"
         ),
         title='Band Formation Timeline',
         title_font_size=22,
@@ -249,11 +235,11 @@ def display_band_info(bands_data, image_directory, pic_width, debug):
             else:
                 file_name_jpg = "Darkwave Band.jpg"
                 image_path_jpg = os.path.join(image_directory, file_name_jpg)
-                st.image(image_path_jpg, width=pic_width, caption=selected_band_name)       
+                st.image(image_path_jpg, width=pic_width, caption='Placeholder Image')       
 
         # Band Name
         st.write("Band Name:", selected_band_data['band'])
-        st.write("Year Started:", selected_band_data['start_year'])
+        st.write("Year Started:", str(selected_band_data['start_year']))
         st.write("City:", selected_band_data['city'])
         st.write("Country:", selected_band_data['country'])
 
@@ -278,7 +264,7 @@ def layout(data, image_directory, pic_width, debug, hide):
     elif selected == "Map":
         display_location_map(data)  # Function call to display the map
     elif selected == "Time Graph":
-        display_time_map(data)  # Function call to display the chronological chart
+        display_time_chart(data)  # Function call to display the chronological chart
     elif selected == "Band Information":
         display_band_info(data, image_directory, pic_width, debug) # Function to show one band.
 
