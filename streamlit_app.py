@@ -54,13 +54,13 @@ def load_json_to_dict(file_path):
         data_dicts = json.load(file)
     return data_dicts
 
-def display_home(anchor):
+def display_home():
     st.write("Venture deep into the shadowy realms of Darkwave music, where echoes of the past intertwine with the pulse of the present..")
 
 def display_location_map(data):
     """
     Display a map with data points.
-    
+
     Args:
     - data (dict): The data to display on the map.
     """
@@ -229,7 +229,7 @@ def display_band_info(bands_data, image_directory, pic_width, debug):
         # Construct the paths to the images
         file_name_png = selected_band_data['band'] + ".png"
         file_name_jpg = selected_band_data['band'] + ".jpg"
-        
+
         image_path_png = os.path.join(image_directory, file_name_png)
         image_path_jpg = os.path.join(image_directory, file_name_jpg)
 
@@ -249,16 +249,13 @@ def display_band_info(bands_data, image_directory, pic_width, debug):
             else:
                 file_name_jpg = "Darkwave Band.jpg"
                 image_path_jpg = os.path.join(image_directory, file_name_jpg)
-                st.image(image_path_jpg, width=pic_width, caption=selected_band_name)
-                
+                st.image(image_path_jpg, width=pic_width, caption=selected_band_name)       
 
         # Band Name
         st.write("Band Name:", selected_band_data['band'])
         st.write("Year Started:", selected_band_data['start_year'])
         st.write("City:", selected_band_data['city'])
         st.write("Country:", selected_band_data['country'])
-
-
 
 
 def layout(data, image_directory, pic_width, debug, hide):
@@ -284,7 +281,6 @@ def layout(data, image_directory, pic_width, debug, hide):
         display_time_map(data)  # Function call to display the chronological chart
     elif selected == "Band Information":
         display_band_info(data, image_directory, pic_width, debug) # Function to show one band.
-    
 
     hide_streamlit_style = """
             <style>
