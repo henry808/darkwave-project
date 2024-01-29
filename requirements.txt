@@ -4,3 +4,4 @@ geopy
 pydeck
 pandas
 plotly
+streamlit-option-menu

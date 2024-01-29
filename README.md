@@ -26,6 +26,7 @@ conda install conda-forge::matplotlib
 conda install conda-forge::geopy
 conda install conda-forge::pydeck
 conda install conda-forge::pandas
+conda install conda-forge::streamlit-option-menu
 # conda install conda-forge::plotly
 ```
 
