@@ -138,32 +138,42 @@ def display_location_map(data):
 
 
 def display_time_chart(data):
+    # Convert data to DataFrame
     df = pd.DataFrame(data)
 
+    # Get current year and filter data
     current_year = datetime.now().year
     df['start_year'] = pd.to_numeric(df['start_year'], errors='coerce')
     df = df.dropna(subset=['start_year'])
     df = df[(df['start_year'] >= 1975) & (df['start_year'] <= current_year)]
 
+    # Check for valid 'band' data
     if 'band' not in df.columns or df['band'].isnull().all():
         st.error("No valid 'band' data to display.")
         return
 
+    # Sort DataFrame in ascending order by 'start_year'
     df = df.sort_values(by='start_year', ascending=True)
+
+    # Set graph height dynamically based on data
     graph_height = max(600, len(df) * 20)
+
+    # Initialize Plotly figure
     fig = go.Figure()
 
+    # Add data points to the figure
     for _, row in df.iterrows():
         fig.add_trace(go.Scatter(
             x=[row['start_year']],
             y=[row['band']],
-            mode='markers+text',
-            name=row['band'],
-            text=[str(row['start_year'])],  # Label for the point
-            textposition="top center",      # Position of the text label
-            marker=dict(size=10)            # Size of the marker
+            mode='markers+text',  # Enable both markers and text
+            text=[str(row['start_year'])],  # Set text label as the year
+            textposition="middle right",    # Position text to the right of the marker
+            marker=dict(size=10),           # Define marker size
+            showlegend=False                # Disable the legend
         ))
 
+    # Update x-axis configuration
     fig.update_xaxes(
         showgrid=True,
         gridwidth=1,
@@ -173,15 +183,17 @@ def display_time_chart(data):
         dtick=5,
         tickformat="%Y",
         mirror=True,
+        range=[1974, current_year + 1]  # Extend x-axis range to accommodate labels
     )
 
+    # Update overall layout of the figure
     fig.update_layout(
         xaxis=dict(
             title='Year',
             tickmode='linear',
             tick0=1975,
             dtick=5,
-            range=[1975, current_year]
+            range=[1974, current_year + 1]  # Extend x-axis range for label visibility
         ),
         yaxis=dict(
             title='Band',
@@ -190,9 +202,11 @@ def display_time_chart(data):
         title='Band Formation Timeline',
         title_font_size=22,
         font_size=20,
-        height=graph_height
+        height=graph_height,
+        margin=dict(r=50)  # Adjust right margin to ensure labels fit
     )
 
+    # Display the chart in Streamlit
     st.header("Band Formation Timeline")
     st.plotly_chart(fig, use_container_width=True)
 
