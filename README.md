@@ -66,10 +66,9 @@ print(location.raw)
 ## ToDo
 1. Fix bands that show up in middle
 2. Add more bands
-3. Add chronological graph
-4. Add Influence graph
-5. Better tooltip display
-6. Fix style
+3. Add Influence graph
+4. Better tooltip display
+5. Fix style
 
 
 ## Support
