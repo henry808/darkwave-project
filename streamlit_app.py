@@ -266,7 +266,13 @@ def layout(data, image_directory, pic_width, debug, hide):
 
     st.title("Darkwave Band Exploration")
 
-    st.write("Test: ", st.secrets["GA_TAG"])
+    try:
+        GA_TAG = st.secrets["GA_TAG"]
+    except KeyError:
+        st.write("Could not find GA_TAG")
+        GA_TAG = ""
+
+    st.write("Test: ", GA_TAG)
 
     # Horizontal Menu
     selected = option_menu("Main Menu",
