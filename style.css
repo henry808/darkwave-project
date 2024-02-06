@@ -3,6 +3,10 @@
     src: url('https://cdn.jsdelivr.net/gh/henry808/darkwave-project/fonts/Bradley%20Gratis.ttf') format('truetype');
 }
 
-body, div, p, h1, h2, h3 {
+html, body, div, p, h1, h2, h3, [class*="css"], a.menu-title, div.menu {
+    font-family: 'Bradley Gratis';
+}
+
+#app * {
     font-family: 'Bradley Gratis';
 }

@@ -266,13 +266,26 @@ def layout(data, image_directory, pic_width, debug, hide):
 
     st.title("Darkwave Band Exploration")
 
+    st.write("Test: ", st.secrets["GA_TAG"])
+
     # Horizontal Menu
     selected = option_menu("Main Menu",
                         ['Home', 'Map', 'Time Graph', 'Band Information'],
                         icons=['house', 'globe-americas','calendar', 'info-circle-fill'],
                         menu_icon='cast',
                         default_index=1,
-                        orientation='horizontal')
+                        orientation='horizontal',
+                        styles={
+                            "container": {"font-family": "Bradley Gratis"},
+                            "menu-title": {"font-family": "Bradley Gratis"},
+                            "nav": {"font-family": "Bradley Gratis"},
+                            "nav-item": {"font-family": "Bradley Gratis"},
+                            "nav-link": {"font-family": "Bradley Gratis"},
+                            "nav-link-selected": {"font-family": "Bradley Gratis"},
+                            "icon": {"font-family": "Bradley Gratis"},
+                            "separator": {"font-family": "Bradley Gratis"},
+                            }
+                        )
     if selected == "Home":
         display_home()
     elif selected == "Map":
