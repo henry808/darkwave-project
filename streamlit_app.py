@@ -48,10 +48,6 @@ def inject_ga(GA_ID, debug):
         new_html = html.replace('<head>', '<head>\n' + GA_JS)
         index_path.write_text(new_html)
 
-
-inject_ga()
-
-
 # Function to load and apply CSS
 def load_css(css_file):
     """
