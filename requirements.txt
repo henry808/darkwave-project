@@ -5,3 +5,4 @@ pydeck
 pandas
 plotly
 streamlit-option-menu
+beautifulsoup4
