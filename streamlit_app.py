@@ -358,7 +358,7 @@ def main():
     json_file_name = 'darkwave_bands.json'  # Replace with your JSON file name
     image_directory = "png"
     pic_width = 500
-    debug = True
+    debug = False
     hide = False
 
     # get data and create layout
