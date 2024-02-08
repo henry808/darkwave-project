@@ -261,7 +261,7 @@ def display_band_info(bands_data, image_directory, pic_width, debug):
 
         if selected_band_data['band'] == "Joy Division":
             st.components.v1.html('<a href="https://www.amazon.com/Joy-Division-Official-Stacked-Pleasures/dp/B0C4CFSQCZ?th=1&psc=1&linkCode=ll1&tag=darkwave0e-20&linkId=b3a2898627699ccd66c805f92e1f7976&language=en_US&ref_=as_li_ss_tl">Joy Division Store</a>')
-
+            st.components.v1.html('<a href="https://amzn.to/3SRSdpu"</a>')
 
 def layout(data, image_directory, pic_width, debug, hide):
 
