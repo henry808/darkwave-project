@@ -260,7 +260,7 @@ def display_band_info(bands_data, image_directory, pic_width, debug):
         st.write("Country:", selected_band_data['country'])
 
         if selected_band_data['band'] == "Joy Division":
-            st.components.v1.html('<a href="https://amzn.to/3Uy8AJ7>Joy Division Store</a>"')
+            st.components.v1.html('<a href="https://amzn.to/3Uy8AJ7">Joy Division Store</a>')
 
 
 def layout(data, image_directory, pic_width, debug, hide):
