@@ -259,11 +259,19 @@ def display_band_info(bands_data, image_directory, pic_width, debug):
         st.write("City:", selected_band_data['city'])
         st.write("Country:", selected_band_data['country'])
 
+        # affiliate marketing testing
         if selected_band_data['band'] == "Joy Division":
-            st.components.v1.html('<a href="https://www.amazon.com/Joy-Division-Official-Stacked-Pleasures/dp/B0C4CFSQCZ?th=1&psc=1&linkCode=ll1&tag=darkwave0e-20&linkId=b3a2898627699ccd66c805f92e1f7976&language=en_US&ref_=as_li_ss_tl">Joy Division Store</a>')
-            st.components.v1.html('<a href="https://amzn.to/3SRSdpu">Unknown Pleasures Vinyl LP</a>')
-            st.components.v1.html('<a href="https://www.geeksforgeeks.org/beautifulsoup-installation-python/">Geek</a>')
+            # st.components.v1.html('<a href="https://www.amazon.com/Joy-Division-Official-Stacked-Pleasures/dp/B0C4CFSQCZ?th=1&psc=1&linkCode=ll1&tag=darkwave0e-20&linkId=b3a2898627699ccd66c805f92e1f7976&language=en_US&ref_=as_li_ss_tl">Joy Division Store</a>')
+            # st.components.v1.html('<a href="https://amzn.to/3SRSdpu">Unknown Pleasures Vinyl LP</a>')
+            # st.components.v1.html('<a href="https://www.geeksforgeeks.org/beautifulsoup-installation-python/">Geek</a>')
+            
+            url = "https://amzn.to/3SRSdpu"
+            st.write("Joy Div [link](%s)" % url)
+            st.markdown("check out this [link](%s)" % url)
 
+            url = "https://www.geeksforgeeks.org/beautifulsoup-installation-python/"
+            st.write("Geeks [link](%s)" % url)
+            st.markdown("check out this [link](%s)" % url)
 
 
 def layout(data, image_directory, pic_width, debug, hide):
