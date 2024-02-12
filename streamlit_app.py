@@ -58,6 +58,14 @@ def load_json_to_dict(file_path):
 
 def display_home():
     st.write("Venture deep into the shadowy realms of Darkwave music, where echoes of the past intertwine with the pulse of the present..")
+    st.write("")
+    st.write("This website has some data analytics about darkwave bands. See the following resources available:")
+    st.write("")
+    st.write("1. Map with darkwave bands' locations.")
+    st.write("")
+    st.write("2. Timeline with start time of darkwave bands in chronological order.")
+    st.write("")
+    st.write("3. Influence chart (coming soon).")
 
 def display_location_map(data):
     """
@@ -261,10 +269,11 @@ def display_band_info(bands_data, image_directory, pic_width, debug):
 
         # affiliate marketing testing
         if selected_band_data['band'] == "Joy Division":
+            # This did not work right:
             # st.components.v1.html('<a href="https://www.amazon.com/Joy-Division-Official-Stacked-Pleasures/dp/B0C4CFSQCZ?th=1&psc=1&linkCode=ll1&tag=darkwave0e-20&linkId=b3a2898627699ccd66c805f92e1f7976&language=en_US&ref_=as_li_ss_tl">Joy Division Store</a>')
             # st.components.v1.html('<a href="https://amzn.to/3SRSdpu">Unknown Pleasures Vinyl LP</a>')
             # st.components.v1.html('<a href="https://www.geeksforgeeks.org/beautifulsoup-installation-python/">Geek</a>')
-            
+
             url = "https://amzn.to/3SRSdpu"
             st.write("Joy Div [link](%s)" % url)
             st.markdown("check out this [link](%s)" % url)
