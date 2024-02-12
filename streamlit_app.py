@@ -296,7 +296,7 @@ def layout(data, image_directory, pic_width, debug, hide):
                         ['Home', 'Map', 'Time Graph', 'Band Information'],
                         icons=['house', 'globe-americas','calendar', 'info-circle-fill'],
                         menu_icon='cast',
-                        default_index=1,
+                        default_index=0,
                         orientation='horizontal',
                         styles={
                             "container": {"font-family": "Bradley Gratis"},
