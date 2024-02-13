@@ -65,7 +65,11 @@ def display_home():
     st.write("")
     st.write("2. Timeline with start time of darkwave bands in chronological order.")
     st.write("")
-    st.write("3. Influence chart (coming soon).")
+    st.write("3. Band information.")
+    st.write("")
+    st.write("4. Influence chart (coming soon).")
+    st.write("")
+    st.write("Choose in the menu above.")
 
 def display_location_map(data):
     """
